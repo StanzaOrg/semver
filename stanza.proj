@@ -1,0 +1,10 @@
+include "src/stanza.proj"
+include "tests/stanza.proj"
+
+build main:
+  inputs: semver/main
+  o: "semver"
+
+build-test tests:
+  inputs: semver/tests
+  o: "semver-test"

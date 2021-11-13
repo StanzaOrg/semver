@@ -1,0 +1,50 @@
+#use-added-syntax(tests)
+defpackage semver/tests:
+  import core
+  import semver
+
+deftest empty-string-should-not-parse:
+  #EXPECT(parse-semver("") == None())
+
+deftest valid-one-component-semver-should-parse:
+  #EXPECT(parse-semver("1") == One(SemanticVersion(1, 0, 0)))
+  #EXPECT(parse-semver("11") == One(SemanticVersion(11, 0, 0)))
+
+deftest valid-two-component-semver-should-parse:
+  #EXPECT(parse-semver("1.2") == One(SemanticVersion(1, 2, 0)))
+  #EXPECT(parse-semver("11.22") == One(SemanticVersion(11, 22, 0)))
+
+deftest valid-three-component-semver-should-parse:
+  #EXPECT(parse-semver("1.2.3") == One(SemanticVersion(1, 2, 3)))
+  #EXPECT(parse-semver("11.22.33") == One(SemanticVersion(11, 22, 33)))
+
+deftest invalid-one-component-semver-should-not-parse:
+  #EXPECT(parse-semver("a") == None())
+  #EXPECT(parse-semver("1.") == None())
+
+deftest invalid-two-component-semver-should-not-parse:
+  #EXPECT(parse-semver("1.b") == None())
+  #EXPECT(parse-semver("a.b") == None())
+  #EXPECT(parse-semver("1.2.") == None())
+
+deftest invalid-three-component-semver-should-not-parse:
+  #EXPECT(parse-semver("1.b.c") == None())
+  #EXPECT(parse-semver("1.2.c") == None())
+  #EXPECT(parse-semver("a.1.2") == None())
+  #EXPECT(parse-semver("a.b.3") == None())
+  #EXPECT(parse-semver("1.2.3.") == None())
+
+deftest nonzero-leading-component-match-should-be-compatible:
+  #EXPECT(compatible?(SemanticVersion(1, 2, 3), SemanticVersion(1, 2, 3)))
+  #EXPECT(compatible?(SemanticVersion(1, 2, 3), SemanticVersion(1, 2, 0)))
+  #EXPECT(compatible?(SemanticVersion(1, 2, 3), SemanticVersion(1, 0, 0)))
+
+  #EXPECT(compatible?(SemanticVersion(0, 2, 3), SemanticVersion(0, 2, 3)))
+  #EXPECT(compatible?(SemanticVersion(0, 2, 3), SemanticVersion(0, 2, 0)))
+
+  #EXPECT(compatible?(SemanticVersion(0, 0, 3), SemanticVersion(0, 0, 3)))
+
+deftest nonzero-leading-component-mismatch-should-not-be-compatible:
+  #EXPECT(not compatible?(SemanticVersion(1, 2, 3), SemanticVersion(2, 2, 3)))
+  #EXPECT(not compatible?(SemanticVersion(0, 2, 3), SemanticVersion(0, 3, 3)))
+  #EXPECT(not compatible?(SemanticVersion(0, 0, 3), SemanticVersion(0, 0, 4)))

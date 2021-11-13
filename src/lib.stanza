@@ -1,0 +1,45 @@
+defpackage semver:
+  import core
+  import maybe-utils
+
+public defstruct SemanticVersion <: Printable & Equalable:
+  major: Int
+  minor: Int
+  patch: Int
+
+defn to-int? (s: String) -> Maybe<Int>:
+  if s == "":
+    None()
+  else:
+    core/to-int(s) $> to-maybe
+
+public defn parse-semver (s: String) -> Maybe<SemanticVersion>:
+  label<Maybe<SemanticVersion>> return:
+    val components = to-tuple $ split(s, ".")
+    defn component? (index: Int) -> Int:
+      components[index] $> to-int? $> value-or-return{_, return}
+
+    switch(length(components)):
+      0: None()
+      1: One(SemanticVersion(component?(0), 0, 0))
+      2: One(SemanticVersion(component?(0), component?(1), 0))
+      3: One(SemanticVersion(component?(0), component?(1), component?(2)))
+      else: None()
+
+defmethod print (o: OutputStream, v: SemanticVersion) -> False:
+  print(o, "%~.%~.%~" % [major(v), minor(v), patch(v)])
+
+defmethod equal? (v1: SemanticVersion, v2: SemanticVersion) -> True|False:
+  major(v1) == major(v2) and
+  minor(v1) == minor(v2) and
+  patch(v1) == patch(v2)
+
+public defn compatible? (v1: SemanticVersion, v2: SemanticVersion) -> True|False:
+  defn both-zero (a: Int, b: Int): (a == 0 and b == 0)
+
+  if not both-zero(major(v1), major(v2)):
+    major(v1) == major(v2)
+  else if not both-zero(minor(v1), minor(v2)):
+    minor(v1) == minor(v2)
+  else:
+    patch(v1) == patch(v2)
