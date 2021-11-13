@@ -10,6 +10,9 @@ public defstruct SemanticVersion <: Printable & Equalable & Comparable<SemanticV
 defn to-int? (s: String) -> Maybe<Int>:
   if s == "":
     None()
+  ; Semver versions must not contain leading zeros
+  else if length(s) > 1 and prefix?(s, "0"):
+    None()
   else:
     core/to-int(s) $> to-maybe
 
@@ -20,9 +23,6 @@ public defn parse-semver (s: String) -> Maybe<SemanticVersion>:
       components[index] $> to-int? $> value-or-return{_, return}
 
     switch(length(components)):
-      0: None()
-      1: One(SemanticVersion(component?(0), 0, 0))
-      2: One(SemanticVersion(component?(0), component?(1), 0))
       3: One(SemanticVersion(component?(0), component?(1), component?(2)))
       else: None()
 
