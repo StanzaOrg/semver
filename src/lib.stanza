@@ -2,7 +2,7 @@ defpackage semver:
   import core
   import maybe-utils
 
-public defstruct SemanticVersion <: Printable & Equalable:
+public defstruct SemanticVersion <: Printable & Equalable & Comparable<SemanticVersion>:
   major: Int
   minor: Int
   patch: Int
@@ -33,6 +33,16 @@ defmethod equal? (v1: SemanticVersion, v2: SemanticVersion) -> True|False:
   major(v1) == major(v2) and
   minor(v1) == minor(v2) and
   patch(v1) == patch(v2)
+
+defmethod compare (v1: SemanticVersion, v2: SemanticVersion) -> Int:
+  label<Int> return:
+    defn compare-return-nonzero (a: Int, b: Int):
+      if compare(a, b) != 0:
+        return(compare(a, b))
+
+    compare-return-nonzero(major(v1), major(v2))
+    compare-return-nonzero(minor(v1), minor(v2))
+    return(compare(patch(v1), patch(v2)))
 
 public defn compatible? (v1: SemanticVersion, v2: SemanticVersion) -> True|False:
   defn both-zero (a: Int, b: Int): (a == 0 and b == 0)

@@ -48,3 +48,48 @@ deftest nonzero-leading-component-mismatch-should-not-be-compatible:
   #EXPECT(not compatible?(SemanticVersion(1, 2, 3), SemanticVersion(2, 2, 3)))
   #EXPECT(not compatible?(SemanticVersion(0, 2, 3), SemanticVersion(0, 3, 3)))
   #EXPECT(not compatible?(SemanticVersion(0, 0, 3), SemanticVersion(0, 0, 4)))
+
+deftest previous-version-should-be-lesser:
+  #EXPECT(SemanticVersion(0, 0, 1) < SemanticVersion(0, 0, 2))
+  #EXPECT(SemanticVersion(0, 0, 1) < SemanticVersion(0, 0, 9))
+  #EXPECT(SemanticVersion(0, 0, 1) < SemanticVersion(0, 1, 0))
+  #EXPECT(SemanticVersion(0, 0, 1) < SemanticVersion(1, 0, 0))
+
+  #EXPECT(SemanticVersion(0, 1, 1) < SemanticVersion(0, 1, 2))
+  #EXPECT(SemanticVersion(0, 1, 1) < SemanticVersion(0, 1, 9))
+  #EXPECT(SemanticVersion(0, 1, 1) < SemanticVersion(0, 2, 0))
+  #EXPECT(SemanticVersion(0, 1, 1) < SemanticVersion(1, 0, 0))
+
+  #EXPECT(SemanticVersion(1, 1, 1) < SemanticVersion(1, 1, 2))
+  #EXPECT(SemanticVersion(1, 1, 1) < SemanticVersion(1, 1, 9))
+  #EXPECT(SemanticVersion(1, 1, 1) < SemanticVersion(1, 2, 0))
+  #EXPECT(SemanticVersion(1, 1, 1) < SemanticVersion(2, 0, 0))
+
+deftest newer-version-should-be-greater:
+  #EXPECT(SemanticVersion(0, 0, 2) > SemanticVersion(0, 0, 1))
+  #EXPECT(SemanticVersion(0, 0, 9) > SemanticVersion(0, 0, 1))
+  #EXPECT(SemanticVersion(0, 1, 0) > SemanticVersion(0, 0, 1))
+  #EXPECT(SemanticVersion(1, 0, 0) > SemanticVersion(0, 0, 1))
+
+  #EXPECT(SemanticVersion(0, 1, 2) > SemanticVersion(0, 1, 1))
+  #EXPECT(SemanticVersion(0, 1, 9) > SemanticVersion(0, 1, 1))
+  #EXPECT(SemanticVersion(0, 2, 0) > SemanticVersion(0, 1, 1))
+  #EXPECT(SemanticVersion(1, 0, 0) > SemanticVersion(0, 1, 1))
+
+  #EXPECT(SemanticVersion(1, 1, 2) > SemanticVersion(1, 1, 1))
+  #EXPECT(SemanticVersion(1, 1, 9) > SemanticVersion(1, 1, 1))
+  #EXPECT(SemanticVersion(1, 2, 0) > SemanticVersion(1, 1, 1))
+  #EXPECT(SemanticVersion(2, 0, 0) > SemanticVersion(1, 1, 1))
+
+deftest same-version-should-be-equal:
+  #EXPECT(SemanticVersion(0, 0, 1) == SemanticVersion(0, 0, 1))
+  #EXPECT(SemanticVersion(0, 1, 1) == SemanticVersion(0, 1, 1))
+  #EXPECT(SemanticVersion(1, 1, 1) == SemanticVersion(1, 1, 1))
+
+deftest different-version-should-not-be-equal:
+  #EXPECT(SemanticVersion(0, 0, 2) != SemanticVersion(0, 0, 1))
+  #EXPECT(SemanticVersion(0, 2, 2) != SemanticVersion(0, 1, 1))
+  #EXPECT(SemanticVersion(2, 2, 2) != SemanticVersion(1, 1, 1))
+
+deftest should-print-separated-by-dots:
+  #EXPECT(to-string(SemanticVersion(1, 2, 3)) == "1.2.3")
