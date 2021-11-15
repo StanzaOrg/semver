@@ -1,4 +1,4 @@
 name = "semver"
-version = "0.1.1"
+version = "0.1.2"
 [dependencies]
-maybe-utils = "git@github.com:tylanphear/maybe-utils|latest"
+maybe-utils = "tylanphear/maybe-utils|latest"
