@@ -1,4 +1,4 @@
 name = "semver"
-version = "0.1.2"
+version = "0.1.3"
 [dependencies]
-maybe-utils = "tylanphear/maybe-utils|latest"
+maybe-utils = "tylanphear/maybe-utils|0.1.2"
