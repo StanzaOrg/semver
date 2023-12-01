@@ -2,10 +2,13 @@ defpackage semver:
   import core
   import maybe-utils
 
-public defstruct SemanticVersion <: Printable & Equalable & Comparable<SemanticVersion>:
+public defstruct SemanticVersion <: Printable & Equalable & Hashable & Comparable<SemanticVersion>:
   major: Int
   minor: Int
   patch: Int
+with:
+  hashable => true
+  equalable => true
 
 defn to-int? (s: String) -> Maybe<Int>:
   if s == "":
@@ -28,11 +31,6 @@ public defn parse-semver (s: String) -> Maybe<SemanticVersion>:
 
 defmethod print (o: OutputStream, v: SemanticVersion) -> False:
   print(o, "%~.%~.%~" % [major(v), minor(v), patch(v)])
-
-defmethod equal? (v1: SemanticVersion, v2: SemanticVersion) -> True|False:
-  major(v1) == major(v2) and
-  minor(v1) == minor(v2) and
-  patch(v1) == patch(v2)
 
 defmethod compare (v1: SemanticVersion, v2: SemanticVersion) -> Int:
   label<Int> return:
