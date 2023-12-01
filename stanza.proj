@@ -1,3 +1,4 @@
+include? ".slm/stanza.proj"
 include "src/stanza.proj"
 include "tests/stanza.proj"
 

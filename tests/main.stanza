@@ -1,6 +1,7 @@
 #use-added-syntax(tests)
 defpackage semver/tests:
   import core
+  import collections
   import semver
 
 deftest empty-string-should-not-parse:
@@ -84,3 +85,16 @@ deftest different-version-should-not-be-equal:
 
 deftest should-print-separated-by-dots:
   #EXPECT(to-string(SemanticVersion(1, 2, 3)) == "1.2.3")
+
+deftest is-hashable:
+  val table = to-hashtable<SemanticVersion, String>([
+    SemanticVersion(0, 1, 2) => "hash1",
+    SemanticVersion(0, 2, 2) => "hash2",
+    SemanticVersion(1, 0, 3) => "hash3"
+  ])
+
+  val hash-str = get?(table, SemanticVersion(0, 1, 2), false)
+  #EXPECT(hash-str is String)
+
+  val non-hash-str = get?(table, SemanticVersion(2,3,2), false)
+  #EXPECT(non-hash-str is False)
