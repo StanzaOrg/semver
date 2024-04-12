@@ -1,7 +1,16 @@
 include? ".slm/stanza.proj"
-include "src/stanza.proj"
-include "tests/stanza.proj"
+pkg-cache: ".slm/pkg-cache"
 
-build-test tests:
-  inputs: semver/tests
+package semver defined-in "src/semver.stanza"
+packages semver/* defined-in "src/semver/"
+
+build main :
+  inputs:
+    maybe-utils
+  pkg: ".slm/pkgs"
+  ;o: "main"
+
+build-test test:
+  inputs:
+    semver/tests
   o: "semver-test"
