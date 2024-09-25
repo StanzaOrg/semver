@@ -1,5 +1,5 @@
 name = "semver"
-version = "0.1.8"
+version = "0.1.9"
 
 [dependencies]
 maybe-utils = { git = "StanzaOrg/maybe-utils", version = "0.1.6" }
